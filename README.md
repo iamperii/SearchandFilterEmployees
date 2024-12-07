@@ -9,4 +9,4 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 =======
 # SearchAndFilterEmployees
->>>>>>> 8a1b549e759b335b0be9b75cc1d1e30cca50d991
+
