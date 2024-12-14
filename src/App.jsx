@@ -1,35 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import './App.css';
+import SearchBox from './Components/SearchBox';
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [response, setResponse] = useState([]);
+	const [filteredEmployees, setFilteredEmployees] = useState(response);
+	const [show, setShow] = useState(true);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				let response = await fetch(
+					'https://5ea5ca472d86f00016b4626d.mockapi.io/brotherhood'
+				);
+				let data = await response.json();
+				setResponse(data);
+			} catch (error) {
+				console.error('Failed to load users', error);
+			}
+		};
+		setShow(true);
+		fetchData();
+	}, []);
+
+	return (
+		<>
+			<SearchBox
+				response={response}
+				setFilteredEmployees={setFilteredEmployees}
+				setShow={setShow}
+			/>
+
+			{show && (
+				<div className="employeers-container">
+					{response?.map((user) => (
+						<div key={user.id} className="employeers">
+							<p>Name: {user.name}</p>
+							<p>Role: {user.role}</p>
+							<p>Department: {user.department}</p>
+						</div>
+					))}
+				</div>
+			)}
+
+			{!show && (
+				<div className="employeers-container">
+					<h2>Filtered Employees</h2>
+					{filteredEmployees?.map((user) => (
+						<div key={user.id} className="employeers">
+							<p>Name: {user.name}</p>
+							<p>Role: {user.role}</p>
+							<p>Department: {user.department}</p>
+						</div>
+					))}
+				</div>
+			)}
+		</>
+	);
 }
 
-export default App
+export default App;
